@@ -33,6 +33,19 @@ def analyze(request):
         params={'purpose':'Capitalized','analyzed_text':analyzed}
         djtext=analyzed
 
+    if spaceremover=='on':
+        analyzed = ""
+        for index, char in enumerate(djtext):
+            # It is for if a extraspace is in the last of the string
+            if char == djtext[-1]:
+                if not(djtext[index] == " "):
+                    analyzed = analyzed + char
+
+            elif not(djtext[index] == " " and djtext[index+1]==" "):                        
+                analyzed = analyzed + char
+        params = {'purpose': 'Removed NewLines', 'analyzed_text': analyzed}
+        djtext = analyzed
+        
     if newlineremover=='on':
         analyzed=""
         djtext = djtext.replace('\r\n',' ').replace('\n','')
@@ -42,17 +55,6 @@ def analyze(request):
                 analyzed=analyzed+char
         params={'purpose':'Removed new line','analyzed_text':analyzed}
         djtext=analyzed
-
-    if spaceremover=='on':
-        analyzed = ""
-        for index, char in enumerate(djtext):
-            # It is for if a extraspace is in the last of the string
-            if char == djtext[-1]:
-                    if not(djtext[index] == " "):
-                        analyzed = analyzed + char
-
-            elif not(djtext[index] == " " and djtext[index+1]==" "):                        
-                analyzed = analyzed + char
     
     if (numberremover == "on"):
         analyzed = ""
@@ -66,6 +68,6 @@ def analyze(request):
         djtext = analyzed
     
     if(removepunc!='on' and fullcaps!='on' and newlineremover!='on' and spaceremover!='on' and numberremover!='on'):
-        return HttpResponse('please select any operation and try again!')
+        return HttpResponse('<h1>please select any operation and try again!</h1>')
 
     return render(request, 'analyze.html', params)
